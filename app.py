@@ -15,7 +15,8 @@ def load_listings_data():
         return listing_data
     except:
         print("Something went wrong")
-        
+
+'''       
 @app.route("/")
 def feature1_main():
     #return render_template("index.html", listing_data = current_app.listing_data)\
@@ -135,8 +136,9 @@ def feature2_results():
                                lease_commence_year = lease_commence_year )
     else:
         return render_template("feature2_charts_display.html")
-
+'''
 if __name__ == "__main__":
+    print("THIS IS RUNNING")
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.listing_data = load_listings_data()
     app.run(debug = True)
