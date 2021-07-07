@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% set active_page = "f1" %}
+
+{% block content %}
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+
+  <!-- Sample Data --> 
+   <script type="text/javascript">
+     // Get JSON data from server
+     LISTING_DATA = JSON.parse('{{ listing_data | tojson | safe }}');
+  </script>
+
+
+  <div class = "container-fluid h-100 w-100">
+    <!-- Town Selection Bar -->
+    <div class="row h-10 align-items-center text-center">
+      <div class="col">
+        <select id="town-select" name="towns" class="mx-auto" selected >
+          <option value="">--Please choose a town--</option>
+          <script type="text/javascript">
+            // Generate the option tags dynamically based on data.
+            // TODO/IDEA: Use Jinja instead;
+            let towns = Object.keys(LISTING_DATA);
+            towns.sort();
+            let selects = [];
+            for (let i = 0; i < towns.length; i++) {
+              selects.push("<option value='" + towns[i] + "''>" + towns[i] + "</option>"); 
+            }
+            $("#town-select").append(selects.join(''));
+          </script>
+
+      </select>
+      </div>
+    </div>
+    
+    <!-- Menu and Map -->
+    <div class="row h-90">
+      <div class="col-3 position-relative bg-dark border round-corners py-2">
+        <!-- TODO: Maybe put a label --> 
+
+        <!-- Inner Container -->
+        <div id ="display-houses" class = "position-absolute all-0 d-flex flex-column ">
+          <!-- Items will be populated via JavaScript upon selection-->
+          <div class="accordion accordion-flush" id="accordionFlushExample"></div>
+        </div>
+
+      </div>
+
+      <!-- Map -->
+      <div class="col-9 mh-100 px-0">
+        <div id="display-geo" class="h-100 w-100 px-2 py-2">
+          <!-- Placeholder TODO: Swap this out with actual plugin 
+          <img id="display-geo-map" src="doge.jpg" alt="map"> -->
+
+          <div id="display-geo-map" class="border"> </div>
+            <script type="text/javascript">
+              // The first parameter are the coordinates of the center of the map
+              // The second parameter is the zoom level
+              // TODO: Change the center location
+              var mymap = L.map('display-geo-map').setView([1.3521, 103.8198], 14);        
+              
+              // Config Tile layer
+              L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+              }).addTo(mymap);
+            
+            </script>
+          
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Dyanamically Generate Content with a Script -->
+  <script type="text/javascript">
+    var currentSelection = "";
+
+    // Add a listener for our selct 
+    const townSelect = document.querySelector('#town-select');
+    townSelect.addEventListener('change', (event) => {
+      let selected_town = event.target.value;
+      console.log(selected_town);
+      if (selected_town !== "") {
+        let townData =  LISTING_DATA[selected_town];
+        fillAccordion(selected_town, townData["data"]);
+        fillMap(selected_town , townData);
+        currentSelection = selected_town;
+      }
+      
+    });
+    
+    var baseURL = "{{ url_for('feature1_form') }}"
+    // Function to fill our accordion
+    function fillAccordion(town, listingData) {
+      let len = Object.keys(listingData).length;
+      var html = [];
+      for (var i = 1; i <= len; i++) {
+        index = i.toString();
+        let heading_id = "flush-heading_" + index;
+        let collapse_id = "flush-collapse_" + index;
+        let button_id = "flush-button_" + index;
+        let req_link = baseURL + "?town=" + town + "&id=" + index;
+
+        // Display Variables
+        let rooms = ""
+        let price = 0
+
+        for (var r=5; r >= 3; r--) {
+          rm = r.toString();
+          rmKey = rm + "_room";
+          if (rmKey in listingData[index]["prices"]) {
+            rooms = " / " + rm + " Room" + rooms;
+            price = listingData[index]["prices"][rmKey];
+          }
+        }
+
+        rooms = rooms.substring(2);
+        price = "From $" + price; 
+
+        let content_html = 
+          '<div class="accordion-item listing-item">' + 
+            '<h2 class="accordion-header" id="' + heading_id + "\">" + 
+              '<button id="' + button_id + '"class="accordion-button collapsed listing-button" type="button" data-bs-toggle="collapse" data-bs-target="#' + 
+                collapse_id + '" aria-expanded="false" aria-controls="' + collapse_id + '">' + 
+                '<p class = "listing-header-text">' + listingData[index]["name"] + '</br>' + 
+                  '<span class = "listing-header-subtext">' + rooms + '</span>' +
+                '</p>' +  
+              '</button>' + 
+            '</h2>' + 
+            '<div id="' + collapse_id + '" class="accordion-collapse collapse" aria-labelledby="' 
+              + heading_id + '" data-bs-parent="#accordionFlushExample">' +
+              '<div class="accordion-body">' + 
+                '<p>' + price + '</p>' +
+                '<a class="btn btn-primary" href="' + req_link + '"> See More </a>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        html.push(content_html);
+      }
+      document.getElementById('accordionFlushExample').innerHTML = html.join('');
+    }
+
+    // Click handler for accordion items to shift the map view
+    // TODO: use base JS instead of 
+
+    $("#accordionFlushExample").on('click', ".accordion-header", function() {
+      //console.log($(this).attr('id'));
+      let x_id = parseInt($(this).attr('id').split("_")[1]);
+      //console.log(x_id);
+      let dx = LISTING_DATA[currentSelection]["data"][x_id];
+      //Add some logic here to see if map is currently here
+      mymap.flyTo([dx['lat'], dx['lon']], 17);
+    });
+
+
+    var townFeatureGroups = {};  
+
+    // Click Hander for map 
+     function onMarkerClick(e) {
+          var targetMarker = e.sourceTarget;
+          var mId =  targetMarker.options.markerId;
+          var targetEle = "flush-button_" + mId;
+          //alert("You clicked the map at " + targetEle);
+          
+          // TODO: add check to see whether current element is already expanded selected
+
+          document.getElementById(targetEle).click();
+      }
+
+    //CUstom icon for map
+    //TODO: Add a inactive/active icon (grey vs purple)
+
+    const houseIcon = L.divIcon({
+      html: 
+        `<svg 
+          height="25" 
+          width="25"
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 21 21"
+        > 
+        <rect x="1" y="1" rx="9.5" ry="9.5" width="19" height="19" stroke="rgba(106,53,252,0.69)" style="stroke-linejoin:round;stroke-miterlimit:4;" fill="rgba(106,53,252,0.69)" stroke-width="2"></rect>
+        <rect x="1" y="1" width="19" height="19" rx="13.5" ry="13.5" fill="#ffffff"></rect>
+        <path fill="#6a35fc" transform="translate(3 3)" d="M3,2v11h5v-3h3v3h1V2H3z M7,12H4v-2h3V12z M7,9H4V7h3V9z M7,6H4V4h3V6z M11,9H8V7h3V9z M11,6H8V4h3V6z"></path>
+        </svg>`,
+      className: "",
+      iconSize: [25, 25],
+      iconAnchor: [12.5, 25],
+
+      
+    });
+
+    //Function to fill our map
+    //TODO: Use panes instead of adding/removing laters once data size grows
+    // else performance will dip
+
+    function fillMap(town, townData) {
+      // Check if there is an existing selection layer 
+      if (currentSelection !== ""){
+        // Remove existing selection layer
+        mymap.removeLayer(townFeatureGroups[currentSelection]);
+      }
+      
+      if (town in townFeatureGroups) {
+        //For existing, show the map
+        mymap.addLayer(townFeatureGroups[town]);
+      } else {
+        let listingData = townData["data"];
+        // FG has not been generated - Generate Location markers
+        var location_markers = [];
+        Object.keys(listingData).forEach(function(key) {
+            var point = listingData[key]
+            var marker = L.marker([point["lat"], point["lon"]], {markerId: key, icon: houseIcon });
+                //.bindPopup(point["name"]); 
+            location_markers.push(marker);
+        });
+        //Create a featuregroup for all markers
+        var fg = L.featureGroup(location_markers)
+                  .on("click", onMarkerClick) //bind click handler
+                  .addTo(mymap);
+        // Cache
+        townFeatureGroups[town] = fg;
+      }
+
+      mymap.setView([townData["center_lat"], townData["center_lon"]], 15);
+    }
+
+                
+
+
+  </script>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+<!-- Data Test -->
+<p>Input results -- {{flatType}} -- {{flatPrice}}
+    {{mstatus}} --- {{age}} --- {{nationality}} --- {{firstTime}} --- {{mthInc}} --- {{estDist}} 
+  </p>
+
+
+
+<div class="container border bg-light round-corners">
+        <div class="row">
+          <div class="col-sm-4 p-3 border-bottom border-end form-reg-text form-helper-msg">
+            Based on the above, you are eligible for the following grants
+          </div>
+          <div class="col-sm-8 p-3 border-bottom ">
+            
+            <div class="form-reg-text">grant 1 | - AMT </div>
+            <div class="form-reg-text">grant 2</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4 p-3 form-reg-text border-end">
+            You can expect to pay:
+          </div>
+          <div class="col-sm-8 p-3 form-reg-text">
+            $<span class="text-danger">{{dollarPerMonth}}</span> per month
+          </div>
+        </div>
+      
+    </div>
+
+    <!-- Buttons -->
+    <div class="container my-3">
+        <div class="row">
+          <div class = "col-sm-12 d-flex justify-content-center">
+            <a href = "{{ url_for('formpage') }}" class="btn btn-primary form-btm-btn">Re-calculate</a>
+  
+            <!-- IDEA: We can send data back as a form? 
+            <form method="POST" action="/homeformpage" class="btn btn-primary form-btm-btn">
+              <button class="btn btn-primary form-btm-btn">Re-calculate</button>
+            </form>
+            -->
+          </div>
+        </div>
+      </div> 

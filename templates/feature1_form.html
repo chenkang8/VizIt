@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% set active_page = "f1" %}
+
+{% block content %}
+  <script>
+    // Populate serverside
+    var room_prices = {"3room": '{{price3Room}}', "4room": '{{price4Room}}', "5room": '{{price5Room}}'};
+  </script>
+
+  <div class = "container-fluid body-bg-2 h-100 w-100"> 
+
+    <!-- Form -->
+    <form class = "h-100 w-100 d-flex flex-column" method="POST" action="/f1_form_results">
+
+      <!-- Flat, price and type -->
+      <div class="row mb-3 mx-1 mx-md-4"> 
+        <div class = "col-12">
+          <!-- Infomation Display -->
+          <div class="row justify-cont  ent-between align-items-center">
+            <!-- Left: Listing Name -->
+            <div id="f1-formpage-top-listing-d" class="col-sm-8 p-3 border border-end-0 bg-light form-big-text">{{ listing_name }}</div>
+            <input type="hidden" id="f1-form-listing-name" name="listingName" value = "{{ listing_name }}">
+          
+            <!-- Right: -->
+            <div id="f1-formpage-top-price-d" class="col-sm-4 p-3 border price-unavailable">
+              <div id="prices" class="form-big-text text-white text-center">$000000</div>
+              <input type="hidden" id="f1-form-price-input" name="flatPrice">  
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="row justify-content-end">
+            <div class="col-sm-4 px-0">
+              <div id="f1-formpage-top-btn-group" class="btn-group w-100 border border-top-0" 
+                role="group" aria-label="Flat Type Selection">
+                <label id="btnlabel3room" class="btn price-3room" for="btnradio3room"> 3 Room
+                  <input type="radio" class="btn-check" name="flatType" id="btnradio3room" value="3room">
+                </label>
+                <label id="btnlabel4room" class="btn price-4room" for="btnradio4room">4 Room
+                  <input type="radio" class="btn-check" name="flatType" id="btnradio4room" value="4room">
+                </label>
+                <label id="btnlabel5room" class="btn price-5room" for="btnradio5room">5 Room
+                  <input type="radio" class="btn-check" name="flatType" id="btnradio5room" value="5room">
+                </label>
+              </div>
+
+              <script>
+                /*
+                * Handlers for toggling of button
+                * COMMENT: Depreciated JQuery in favor of native javascript, which is much faster  
+                */
+           
+                // Set initial state for the button selector
+                var initial_price = 0;
+                var initial_color = ""
+                for (var r=5; r >= 3; r--) {
+                  var key = r.toString() + "room"; 
+                  var value = room_prices[key];
+                  if (value == -1) {
+                    document.getElementById("btnlabel" + key).className = "btn disabled price-unavailable";
+                  } else {
+                    initial_price = value;
+                    initial_color = key;
+                  }
+                }
+                document.getElementById("btnradio" + initial_color).checked = "checked";
+                document.getElementById("prices").textContent = "$" + initial_price;
+                document.getElementById("f1-form-price-input").value = initial_price;
+                document.getElementById("f1-formpage-top-price-d").style.backgroundColor = "var(--price-" + initial_color +"-color)";
+                
+                var btnGroup = document.getElementById("f1-formpage-top-btn-group");
+                // Bind event listeners to our radio buttons
+                btnGroup.querySelectorAll('input[type="radio"]').forEach((elem) => {
+                  elem.addEventListener("change", function(event) {
+                    var selectedflatType = event.target.value;
+                    // Update Price display text
+                    var price = room_prices[selectedflatType];
+                    document.getElementById("prices").textContent = "$" + price;
+                    // Update Price display styling
+                    var setCSS = "var(--price-" + selectedflatType +"-color)";
+                    document.getElementById("f1-formpage-top-price-d").style.backgroundColor = setCSS;
+                    // Update Price data input(used for passing data)
+                    document.getElementById("f1-form-price-input").value = price;
+                  });
+                });
+              </script>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Details Input -->
+      <div class="row mb-3 mx-1 mx-md-4 bg-light border round-corners py-3 flex-grow-1">
+        <div class="col-12 d-flex flex-column"> 
+
+          <!-- Info message -->
+          <div class="row justify-content-between align-items-center mb-3">
+            <div class="col-12 text-style-2">Tell us about yourself and we’ll tell you how much you need</div>
+          </div>
+
+          <!-- More user inputs  -->
+          <div class="row text-center flex-grow-1">
+            <div class="col-sm-4">
+              <label for="mstatus" class="form-label">Maritial Status:</label><br>
+              <select id="mstatus" name="mstatus" class="form-select w-75 mx-auto">
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+              </select>
+            </div>
+
+            <div class="col-sm-4">
+              <label for="age" class="form-label">Age:</label><br>
+              <input type="number" id="age" name="age" class="form-control w-75 mx-auto" placeholder="35">
+            </div>
+
+            <div class="col-sm-4">
+              <label for="nationality" class="form-label">Nationality:</label><br>
+              <select id="nationality" name="nationality" class="form-select w-75 mx-auto">
+                  <option value="singaporean">Singapore Citizen</option>
+                  <option value="singaporePR">PR</option>
+                  <option value="nsingaporean">Non-Singapore Citizen</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row text-center flex-grow-1">
+
+            <div class="col-sm-4">
+              <label for="firstTime" class="form-label">Spouse also first-time:</label><br>
+              <select id="firstTime" name="firstTime" class="form-select w-75 mx-auto">
+                  <option value="true">True</option>
+                  <option value="false">False</option>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+              <label for="mthInc" class="form-label">Monthly Income (SGD):</label><br>
+              <input type="number" id="mthInc" name="mthInc" class="form-control w-75 mx-auto" placeholder="4500">
+            </div>
+
+            <div class="col-sm-4">
+              <label for="estDist" class="form-label">Estimated Distance to Parent's Home:</label><br>
+              <select id="estDist" name="estDist" class="form-select w-75 mx-auto">
+                  <option value="under">Under 4km</option>
+                  <option value="over">Over 4km</option>
+                </select>
+            </div>
+          </div>
+            
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="row mb   mx-1 mx-md-4">
+          <div class = "col-sm-12 d-flex justify-content-center">
+            <button type="submit" class="btn btn-danger form-btm-btn">Calculate</button> 
+          </div>
+      </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

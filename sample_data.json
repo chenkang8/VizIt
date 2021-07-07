@@ -1,0 +1,52 @@
+{
+  "Woodlands": {
+    "center_lat": 1.438337, 
+    "center_lon": 103.789164,
+    "data": {
+      "1": {"lat": 1.431713, "lon": 103.783562, "name": "Woodgrove Ascent",
+              "prices": {"2_Room": 98000, "3_Room": 185000, "4_room": 275000, "5_room": 372000}}, 
+      "2": {"lat": 1.431368, "lon": 103.790240, "name": "Block 570C",
+              "prices": {"3_Room": 330000, "4_room": 445000, "5_room": 275000}}, 
+      "3": {"lat": 1.442064, "lon": 103.787218, "name": "Block 807", 
+              "prices": {"3_Room": 345000, "4_room": 470000, "5_room": 550000}},
+      "4": {"lat": 1.442406, "lon": 103.792642, "name": "Block 866A",
+              "prices": {"2_Room": 100000, "3_room": 150000}} 
+    }
+  }, 
+  "Geylang": {
+    "center_lat": 1.319840, 
+    "center_lon": 103.890797,
+    "data": {
+      "1": {"lat": 1.327627, "lon": 103.889324, "name": "MacPherson Weave", 
+              "prices": {"2_Room": 180000, "3_Room": 343000, "4_room": 489000}}, 
+      "2": {"lat": 1.325608, "lon": 103.886596, "name": "Block 60 Circuit Road",
+              "prices": {"3_Room": 425000, "4_room": 635000}}, 
+      "3": {"lat": 1.315287, "lon": 103.887593, "name": "21 Lor 33 Geylang",
+              "prices": {"3_Room": 565000, "4_room": 800000}}     
+    }
+  },
+  "Tengah": {
+    "center_lat": 1.355697, 
+    "center_lon": 103.730786,
+    "data": {
+      "1": {"lat": 1.360259, "lon": 103.729842, "name": "Garden Bloom @ Tengah ~", 
+              "prices": {"2_room": 113000, "4_room": 299000, "5_room": 404000}},
+      "2": {"lat":  1.355179, "lon": 103.737841, "name": "Blk 440C", 
+              "prices": {"4_room": 365000, "5_room": 505000}},
+      "3": {"lat": 1.353767, "lon": 103.726196, "name": "Block 412", 
+              "prices": {"4_room": 460000, "5_room": 608000}}
+    }
+  },
+  "Bukit Merah": {
+    "center_lat": 1.281829, 
+    "center_lon": 103.826088,
+    "data": {
+      "1": {"lat": 1.273021, "lon": 103.808228, "name": "Telok Blangah Beacon",
+              "prices": {"3_room": 419000, "4_room": 602000}},
+      "2": {"lat": 1.274380, "lon": 103.808634, "name": "BM2", 
+              "prices": {"3_room": 558000, "4_room": 762000}},
+      "3": {"lat":  1.27235, "lon": 103.810550, "name": "BM2",
+              "prices": {"3_room": 650000, "4_room": 860000}}   
+    }
+  }
+}

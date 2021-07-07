@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Our Orbital Project">
+  <meta name="author" content="">
+  <meta name="generator" content="Hugo 0.83.1">
+  <title>Team SU: VizIT</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+    crossorigin="anonymous"></script>
+
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+  <!-- Custom styles for this template -->
+  <!-- Without Flask (Raw Support) -->
+  <link rel="stylesheet" href="../static/cover.css">
+  <!-- Flask URL -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='cover.css') }}">
+
+</head>
+
+<body id ="whole-page" class = "container-fluid px-3 px-md-5 d-flex flex-column text-center">
+  <!-- Header/Navbar -->
+  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between 
+                py-2 px-2 mb-3 border-bottom">
+    <!-- Logo -->
+    <!-- TODO: move this to center -->
+    <span id="logo" class="col-md-3 mb-0"> VizIT </span>
+  
+    <!-- Nav Buttons -->
+    {% set navigation_bar = [
+      ('/', 'index', 'Index'),
+      ('/downloads/', 'downloads', 'Downloads'),
+      ('/about/', 'about', 'About')
+    ] -%}
+  
+    <ul class="nav nav-masthead col-12 col-md-auto justify-content-center mb-0">
+      <a class="nav-link active" aria-current="page" href="#">New Home Buyers</a>
+      <a class="nav-link" href="#">Existing Home Owners</a>
+    </ul>
+    <div class="col-md-3 text-end"></div>
+  </header>
+ 
+    {% block content %}{% endblock %}
+
+</body>
+
+</html>

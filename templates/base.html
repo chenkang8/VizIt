@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Our Orbital Project">
+  <meta name="author" content="">
+  <meta name="generator" content="Hugo 0.83.1">
+  <title>Team SU: VizIT</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+    crossorigin="anonymous"></script>
+
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='cover.css') }}">
+
+</head>
+
+<body id ="whole-page" class = "px-3 px-md-5 d-flex flex-column">
+  <!-- Header/Navbar -->
+  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between 
+                py-2 px-2 mb-3 border-bottom">
+    <!-- Logo -->
+    <!-- TODO: move this to center -->
+    <span id="logo" class="col-md-3 mb-0"> VizIT </span>
+  
+    <!-- Nav Buttons -->
+    {% set active_page = active_page|default('index') -%}
+  
+    <ul class="nav nav-masthead col-12 col-md-auto justify-content-center mb-0">
+      <a href="{{ url_for('feature1_main') }}" 
+        {% if active_page == "f1" %} class="nav-link active" aria-current="feature1"
+        {% else %} class="nav-link"
+        {% endif %}>New Home Buyers</a>
+      <a href="{{ url_for('feature2_form') }}"
+        {% if active_page == "f2" %} class="nav-link active" aria-current="feature2"
+        {% else %} class="nav-link"
+        {% endif %}>Existing Home Owners</a>
+    </ul>
+    <div class="col-md-3 text-end"></div>
+  </header>
+  
+  <!-- Content Portion -->
+  <div class="flex-grow-1 app-content">
+    {% block content %} {% endblock %}
+  </div>
+
+</body>
+
+</html>
