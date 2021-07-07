@@ -3,7 +3,6 @@ import calculate
     
     
 app = Flask(__name__)
-app.listing_data = load_listings_data()
 
 def load_listings_data():
     """ Load Feature1 Listing Data """
