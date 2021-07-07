@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, current_app, json
 import calculate 
+import sys
     
     
 app = Flask(__name__)
@@ -139,6 +140,7 @@ def feature2_results():
 '''
 if __name__ == "__main__":
     print("THIS IS RUNNING")
+    sys.stdout.flush()
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.listing_data = load_listings_data()
     app.run(debug = True)
