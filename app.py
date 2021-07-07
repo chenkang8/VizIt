@@ -137,6 +137,7 @@ def feature2_results():
         return render_template("feature2_charts_display.html")
 
 if __name__ == "__main__":
+    print("this is running")
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.listing_data = load_listings_data()
     app.run(debug = True)
