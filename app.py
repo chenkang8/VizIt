@@ -1,6 +1,6 @@
+import logging
 from flask import Flask, redirect, url_for, render_template, request, current_app, json
 import calculate 
-import sys
     
 app = Flask(__name__)
 
@@ -18,7 +18,7 @@ app = Flask(__name__)
      
 @app.route("/")
 def feature1_main():
-    sys.stdout.write("ENTRYPOINT MAIN CALLED!")
+    app.logger.debug("ENTRYPOINT MAIN CALLED!")
     return render_template("test_index.html")
     
     #return render_template("index.html", listing_data = current_app.listing_data)\
@@ -138,6 +138,13 @@ def feature1_main():
 #                                lease_commence_year = lease_commence_year )
 #     else:
 #         return render_template("feature2_charts_display.html")
+
+# For use with gunicorn 
+# Main is not run with gunicorn
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
 
 if __name__ == "__main__":
     # print("THIS IS RUNNING")
