@@ -4,17 +4,17 @@ import calculate
     
 app = Flask(__name__)
 
-# def load_listings_data():
-#     """ Load Feature1 Listing Data """
-#     try:
-#         print("loading listing data...")
-#         with app.open_resource("sample_data.json") as f:
-#             listing_data = json.load(f)
-#             f.close()
-#         print("listing data loaded") 
-#         return listing_data
-#     except:
-#         print("Something went wrong")
+def load_listings_data():
+    """ Load Feature1 Listing Data """
+    try:
+        app.logger.debug("loading listing data...")
+        with app.open_resource("sample_data.json") as f:
+            listing_data = json.load(f)
+            f.close()
+        app.logger.debug("listing data loaded") 
+        return listing_data
+    except:
+        app.logger.debug("Something went wrong")
      
 @app.route("/")
 def feature1_main():
@@ -147,8 +147,7 @@ if __name__ != '__main__':
     app.logger.setLevel(gunicorn_logger.level)
 
 if __name__ == "__main__":
-    # print("THIS IS RUNNING")
-    # sys.stdout.flush()
-    #app.config["TEMPLATES_AUTO_RELOAD"] = True
-    #app.listing_data = load_listings_data()
+    app.logger.debug("APP IS RUNNING")
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.listing_data = load_listings_data()
     app.run(debug = True)
