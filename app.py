@@ -15,6 +15,14 @@ def load_listings_data():
         return listing_data
     except:
         app.logger.debug("Something went wrong")
+        
+# For use with gunicorn 
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+    app.logger.debug("THIS IS A TEST")
+    app.listing_data = load_listings_data()
      
 @app.route("/")
 def feature1_main():
@@ -138,15 +146,6 @@ def feature1_main():
 #                                lease_commence_year = lease_commence_year )
 #     else:
 #         return render_template("feature2_charts_display.html")
-
-# For use with gunicorn 
-if __name__ != '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
-    app.logger.debug("THIS IS A TEST")
-    app.listing_data = load_listings_data()
-    
 
 if __name__ == "__main__":
     # This only runs when using flask development server
