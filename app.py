@@ -27,10 +27,8 @@ if __name__ != '__main__':
 @app.route("/")
 def feature1_main():
     app.logger.debug("ENTRYPOINT MAIN CALLED!")
-    return render_template("test_index.html")
-    
-    #return render_template("index.html", listing_data = current_app.listing_data)\
-    #return render_template("feature1_main.html", listing_data = current_app.listing_data)  
+    #return render_template("test_index.html")
+    return render_template("feature1_main.html", listing_data = app.listing_data)  
 
 # @app.route("/f1_formpage")
 # def feature1_form():
