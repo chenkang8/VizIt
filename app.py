@@ -140,13 +140,16 @@ def feature1_main():
 #         return render_template("feature2_charts_display.html")
 
 # For use with gunicorn 
-# Main is not run with gunicorn
 if __name__ != '__main__':
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
+    app.logger.debug("THIS IS A TEST")
+    app.listing_data = load_listings_data()
+    
 
 if __name__ == "__main__":
+    # This only runs when using flask development server
     app.logger.debug("APP IS RUNNING")
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.listing_data = load_listings_data()
