@@ -19,7 +19,7 @@ def married_cal(estDist, num_rm, age1, nationality1, mthInc1, first_time1, age2,
     if fhg: 
         eligible_grants.append(fhg)
     # Get PHG
-    phg = general_computation.get_phg_married(estDist, mthInc1, mthInc2)
+    phg = general_computation.get_phg_married(estDist)
     if phg: 
         eligible_grants.append(phg)
 
