@@ -21,6 +21,7 @@ def EHG_compute(monthly_income):
 ## EHG For BTO
 def get_ehg_married_bto(age1, nationality1, mthInc1, first_time1, age2, nationality2, mthInc2, first_time2):
     """ Enhanced Housing Grant (EHG) """
+    
     ehg_amt = 0    
     monthly_income = mthInc1 + mthInc2
     if (monthly_income <= 9000 and nationality1 == "Singapore Citizen" and nationality2 == "Singapore Citizen"):
@@ -48,7 +49,9 @@ def get_ehg_married_res(age1, nationality1, mthInc1, first_time1, age2, national
     """ Enhanced Housing Grant (EHG) """
     ehg_amt = 0    
     monthly_income = mthInc1 + mthInc2
+    
     if (monthly_income <= 9000 and nationality1 == "Singapore Citizen" and nationality2 == "Singapore Citizen"):
+        print("babuskshsah  ")
         ehg_amt = EHG_compute(monthly_income)
 
     elif(monthly_income <= 9000 and nationality2 == "Singapore Citizen" and nationality2 != "Singapore Citizen" and age1 >= 21):
