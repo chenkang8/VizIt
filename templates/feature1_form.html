@@ -2,12 +2,12 @@
 {% set active_page = "f1" %}
 
 {% block content %}
-  <script>
+  <script type="text/javascript">
     // Populate serverside
     var room_prices = {"3room": '{{price3Room}}', "4room": '{{price4Room}}', "5room": '{{price5Room}}'};
   </script>
 
-  <div class = "container-fluid body-bg-2 h-100 w-100"> 
+  <div class = "container-fluid h-100 w-100"> 
 
     <!-- Form -->
     <form class = "h-100 w-100 d-flex flex-column" method="POST" action="/f1_form_results">
@@ -18,11 +18,12 @@
           <!-- Infomation Display -->
           <div class="row justify-cont  ent-between align-items-center">
             <!-- Left: Listing Name -->
-            <div id="f1-formpage-top-listing-d" class="col-sm-8 p-3 border border-end-0 bg-light form-big-text">{{ listing_name }}</div>
+            <div id="f1-formpage-top-listing-d" class="col-sm-8 px-3 py-2a border border-end-0 bg-light form-big-text">{{ listing_name }}</div>
             <input type="hidden" id="f1-form-listing-name" name="listingName" value = "{{ listing_name }}">
+            <input type="hidden" id="f1-form-listing-sale-type" name="saleType" value = "{{ sale_type }}">
           
             <!-- Right: -->
-            <div id="f1-formpage-top-price-d" class="col-sm-4 p-3 border price-unavailable">
+            <div id="f1-formpage-top-price-d" class="col-sm-4 px-3 py-2a border price-unavailable">
               <div id="prices" class="form-big-text text-white text-center">$000000</div>
               <input type="hidden" id="f1-form-price-input" name="flatPrice">  
             </div>
@@ -91,63 +92,139 @@
       </div>
 
       <!-- User Details Input -->
-      <div class="row mb-3 mx-1 mx-md-4 bg-light border round-corners py-3 flex-grow-1">
+      <div class="row mb-3 mx-1 mx-md-4 bg-light border round-corners py-2a flex-grow-1">
         <div class="col-12 d-flex flex-column"> 
 
           <!-- Info message -->
-          <div class="row justify-content-between align-items-center mb-3">
+          <div class="row justify-content-between align-items-center mb-2a">
             <div class="col-12 text-style-2">Tell us about yourself and we’ll tell you how much you need</div>
           </div>
 
-          <!-- More user inputs  -->
-          <div class="row text-center flex-grow-1">
-            <div class="col-sm-4">
-              <label for="mstatus" class="form-label">Maritial Status:</label><br>
-              <select id="mstatus" name="mstatus" class="form-select w-75 mx-auto">
-                  <option value="Single">Single</option>
-                  <option value="Married">Married</option>
-              </select>
+          <!-- Row 1: Maritial Status  --> 
+          <div class="row mb-2a">
+            <!-- Maritial Status -->
+            <div class ="col-sm-6">
+              <div class="row">
+                <div class="col-sm text-center"><label for="mstatus" class="col-form-label">Maritial Status:</label></div>
+                <div class="col-sm">
+                  <select id="mstatus_select" name="mstatus" class="form-select w-75 mx-auto">
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <!-- Distance to Parents Home (only for resale-flat)-->
+            {% if sale_type == "resale" %}
+            <div class ="col-sm-6">
+              <div class="row">
+                <div class="col-sm text-center">
+                  <label for="estDist" class="col-form-label">Estimated Distance to Parent's Home:</label></div>
+                <div class="col-sm">
+                  <select id="estDist" name="estDist" class="form-select w-75 mx-auto">
+                      <option value="with">Living with Parents</option>
+                      <option value="under">Under 4km</option>
+                      <option value="over">Over 4km</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+              
+          </div>
+
+          <!-- Row 2: Heading (non-mobile)-->
+          <div class="row mb-1 d-none d-sm-flex"> 
+            <div class="col-sm-2 text-center"></div>
+            <div class="col-sm-2 text-center"> Age </div>
+            <div class="col-sm-3 text-center"> Nationality </div>
+            <div class="col-sm-3 text-center"> Monthly Income (SGD) </div>
+            <div class="col-sm-2 text-center"> First-time </div>
+          </div>
+
+          <!-- Row 2A: Applicant 1 (Main) Details  -->
+          <div id= "f1-form-applicant-1" class="row flex-grow-1 align-items-center mb-2a">
+            <div class="col-sm-2 text-center">Applicant 1</div>
+
+            <div class="col-sm-2 text-center">
+              <label for="age" class="form-label d-block d-sm-none">Age</label>
+              <input type="number" id="age" name="age" class="form-control w-85 mx-auto" placeholder="35">
             </div>
 
-            <div class="col-sm-4">
-              <label for="age" class="form-label">Age:</label><br>
-              <input type="number" id="age" name="age" class="form-control w-75 mx-auto" placeholder="35">
-            </div>
-
-            <div class="col-sm-4">
-              <label for="nationality" class="form-label">Nationality:</label><br>
-              <select id="nationality" name="nationality" class="form-select w-75 mx-auto">
+            <div class="col-sm-3 text-center">
+              <label for="nationality" class="form-label d-block d-sm-none">Nationality</label>
+              <select id="nationality" name="nationality" class="form-select w-85 mx-auto">
                   <option value="singaporean">Singapore Citizen</option>
                   <option value="singaporePR">PR</option>
                   <option value="nsingaporean">Non-Singapore Citizen</option>
               </select>
             </div>
+            
+            <div class="col-sm-3 text-center">
+              <label for="mthInc" class="form-label d-block d-sm-none">Monthly Income (SGD)</label>
+              <input type="number" id="mthInc" name="mthInc" class="form-control w-85 mx-auto" placeholder="4500">
+            </div>
+
+            <div class="col-sm-2 text-center">
+              <label for="firstTime" class="form-label d-block d-sm-none">First-time</label>
+              <select id="firstTime" name="firstTime" class="form-select w-85 mx-auto">
+                  <option value="true">True</option>
+                  <option value="false">False</option>
+                </select>
+            </div>
           </div>
 
-          <div class="row text-center flex-grow-1">
+          <!-- Row 2B: Applicant 2 (Spouse/Co-applicant) Details  -->
+          <div id= "f1-form-applicant-2" class="row flex-grow-1 align-items-center invisible">
+            <div class="col-sm-2 text-center">Applicant 2</div>
 
-            <div class="col-sm-4">
-              <label for="firstTime" class="form-label">Spouse also first-time:</label><br>
-              <select id="firstTime" name="firstTime" class="form-select w-75 mx-auto">
+            <div class="col-sm-2 text-center">
+              <label for="age2" class="form-label d-block d-sm-none">Age:</label>
+              <input type="number" id="applicant_2_age" name="age2" class="form-control w-85 mx-auto" placeholder="35">
+            </div>
+
+            <div class="col-sm-3 text-center">
+              <label for="nationality2" class="form-label d-block d-sm-none">Nationality:</label>
+              <select id="applicant_2_nationality" name="nationality2" class="form-select w-85 mx-auto">
+                  <option value="singaporean">Singapore Citizen</option>
+                  <option value="singaporePR">PR</option>
+                  <option value="nsingaporean">Non-Singapore Citizen</option>
+              </select>
+            </div>
+            
+            <div class="col-sm-3 text-center">
+              <label for="mthInc2" class="form-label d-block d-sm-none">Monthly Income (SGD):</label>
+              <input type="number" id="applicant_2_mthInc" name="mthInc2" class="form-control w-85 mx-auto" placeholder="4500">
+            </div>
+
+            <div class="col-sm-2 text-center">
+              <label for="firstTime2" class="form-label d-block d-sm-none">First-time:</label>
+              <select id="applicant_2_firstTime" name="firstTime2" class="form-select w-85 mx-auto">
                   <option value="true">True</option>
                   <option value="false">False</option>
                 </select>
             </div>
 
-            <div class="col-sm-4">
-              <label for="mthInc" class="form-label">Monthly Income (SGD):</label><br>
-              <input type="number" id="mthInc" name="mthInc" class="form-control w-75 mx-auto" placeholder="4500">
-            </div>
 
-            <div class="col-sm-4">
-              <label for="estDist" class="form-label">Estimated Distance to Parent's Home:</label><br>
-              <select id="estDist" name="estDist" class="form-select w-75 mx-auto">
-                  <option value="under">Under 4km</option>
-                  <option value="over">Over 4km</option>
-                </select>
-            </div>
           </div>
             
+          <script type="text/javascript">
+            //Handler for showing Applicant 2 input
+            // Add a listener for our selct 
+            const mStatusSelect = document.getElementById('mstatus_select');
+            mStatusSelect.addEventListener('change', (event) => {
+              let mStatus = event.target.value;
+              if (mStatus == "Single") {
+                if (!document.getElementById("f1-form-applicant-2").classList.contains("invisible")){
+                  document.getElementById("f1-form-applicant-2").classList.toggle("invisible")
+                }
+              } else if (mStatus == "Married") {
+                document.getElementById("f1-form-applicant-2").classList.toggle("invisible")
+              }
+            });
+
+          </script>
+
         </div>
       </div>
 

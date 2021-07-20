@@ -2,9 +2,13 @@
 {% set active_page = "f1" %}
 
 {% block content %}
-  <div class="container-fluid h-100 body-bg-2" >
+  <div class="container-fluid h-100" >
 
-    <!-- Testing -->
+    <!-- Testing 
+    <p>Input results {{ listing_name }}-- {{flatType}} -- {{flatPrice}} --
+      {{mstatus}} --- {{age}} --- {{nationality}} --- {{firstTime}} --- {{mthInc}} --- {{estDist}} --
+      {{eligible_grants}} -- {{total_grant}}
+    </p> -->
     
     <!-- Flat, price and type -->
     <div class="row mb-3 mx-1 mx-md-4"> 
@@ -12,9 +16,9 @@
         <!-- Infomation Display -->
         <div class="row justify-content-between align-items-center">
           <!-- Left: Listing Name -->
-          <div id="f1-formpage-top-listing-d" class="col-sm-8 p-3 border border-end-0 bg-light form-big-text">{{ listing_name }}</div>
+          <div id="f1-formpage-top-listing-d" class="col-sm-8 px-3 py-2a border border-end-0 bg-light form-big-text">{{ listing_name }}</div>
           <!-- Right: -->
-          <div id="f1-formpage-top-price-d" class="col-sm-4 p-3 border {{ 'price-'+ flatType }}">
+          <div id="f1-formpage-top-price-d" class="col-sm-4 px-3 py-2a border {{ 'price-'+ flatType }}">
             <div id="prices" class="form-big-text text-white text-center">${{ flatPrice }}</div>
           </div>
         </div>
@@ -37,9 +41,9 @@
     </div>
 
 
-    <div class="row ">
+    <div class="row mx-1 mx-md-4">
       <!-- Left: Grants, Fixed & Monthly Payments -->
-      <div class="col-sm-8 px-4">
+      <div class="col-sm-8">
         <!-- Grants Display -->
         <div class="row bg-light mb-3 border round-corners">
           <div class="col-sm-3 d-flex flex-row align-items-center border-end">
@@ -57,7 +61,7 @@
                 {% for grant, amount in eligible_grants %}  
                 <tr>
                   <td>{{ grant }}</td>
-                  <td>{{ amount }}</td>
+                  <td>${{ amount }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -71,7 +75,7 @@
             <span class="text-style-2 text-break">Upfront/Fixed</span>
           </div>
           <div class="col-sm-9">
-            <p class="text-style-2 w-100 mb-0 text-center">${{upfront_payment}}</p>
+            <p class="text-style-2 text-body w-100 mb-0 text-center">${{upfront_payment}}</p>
             <button class="show-detailed-breakdown-btn w-100 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" 
                 aria-expanded="false" aria-controls="collapseExample">
               <span class="float-end"> See detailed breakdown </span>
@@ -108,12 +112,12 @@
         </div>
 
         <!-- Monthly Payments Display -->
-        <div class="row bg-light border round-corners">
+        <div class="row bg-light border round-corners mb-3">
           <div class="col-sm-3 d-flex flex-row align-items-center border-end">
             <span class="text-style-2 text-break">Monthly</span>
           </div>
           <div class="col-sm-9">
-            <p class="text-style-2 w-100 mb-0 text-center">${{monthly_payment}}</p>
+            <p class="text-style-2 text-body w-100 mb-0 text-center">${{monthly_payment}}</p>
             <button class="show-detailed-breakdown-btn w-100 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#monthly-cost-collapse" 
                 aria-expanded="false" aria-controls="collapseExample">
                 <span class="float-end"> See detailed breakdown </span>
@@ -144,7 +148,7 @@
 
       <!-- Right: Reciept and Status Listing -->
       <div class="col-sm-4">
-        <div class="bg-light border mt-3">
+        <div class="bg-light border mt-3 round-corners">
           <p class="text-style-2 w-100 mb-0 text-center"> Your Financial Standing </p>
           <table id="your-financial-standings" class="table  table-borderless w-100">
             <tbody>
@@ -158,11 +162,11 @@
               </tr>
               <tr>
                 <td>MSR</td>
-                <td>{{MSR}}</td>
+                <td class="{{'text-info' if msr == 'Healthy' else 'text-danger'}}">{{msr}}</td>
               </tr>
               <tr>
                 <td>Status</td>
-                <td class="text-info">{{Fin_status}}</td> <!-- Change to RED if bad !!!!!!!!!!!!!!!!!!!!!-->
+                <td class="{{'text-info' if fin_status == 'Good' else 'text-danger'}}">{{fin_status}}</td> 
               </tr>
             </tbody>
           </table>

@@ -48,13 +48,22 @@ body {
   height: 90%;
 }
 
+.w-85 {
+  width: 85%;
+}
+
+.py-2a {
+  padding-top: .8rem !important;
+  padding-bottom: .8rem !important;
+}
+
+.mb-2a {
+  margin-bottom: .8rem !important;
+}
+
 /* 
  * Text and Font
- */ 
-.text-style-2 {
-  font-size: 1.5em;
-  color: #767676;
-}
+ */
 
 
 
@@ -144,13 +153,6 @@ header {
   object-fit: cover; /* TODO: remove on actual map */
 }
 
-.all-0 {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
 /* 
  * Feature 1 Page 1 - Accordion 
  */ 
@@ -158,19 +160,30 @@ header {
 #display-houses {
   /* Scrolling */ 
   overflow-y: scroll;
-  /* TODO: Scrollbar visual tweaks */ 
   scrollbar-width: thin; /*** Firefox only ***/ 
+
+  /* Relative Positioning */
+  top: 20px;
+  bottom: 20px;
+  left: 0;
+  right: 0;
 
   /* Visual Properties */
   padding-left: 20px;
-  padding-right: 20px;
+  padding-right: 10px;
+}
+
+#display-houses::-webkit-scrollbar {
+  /* Scrollbar Styling for on Chrome, Edge, and Safari */
+  width: 12px;
 }
 
 .listing-item {
-  margin-top: 20px;
-  margin-bottom: 20px;
-
   border-radius: 4px !important;
+}
+
+#display-houses .listing-item:not(:last-child) {
+  margin-bottom: 20px;
 }
 
 .listing-button {
@@ -214,12 +227,17 @@ header {
  */
 .form-big-text {
   font-weight: 500;
-  font-size: 36px;
+  font-size: calc(1.5rem + 0.8vw);
   line-height: 1;
 }
 
+.text-style-2 {
+  font-size: calc(1.2rem + 0.2vw);
+  color: #767676;
+}
+
 .form-btm-btn {
-  padding: 1rem .75rem;
+  padding: 1rem .69rem;
   width: 25%;
 }
 

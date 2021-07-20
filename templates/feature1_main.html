@@ -42,19 +42,19 @@
     
     <!-- Menu and Map -->
     <div class="row h-90">
-      <div class="col-3 position-relative bg-dark border round-corners py-2">
+      <div class="col-md-3 position-relative bg-dark border round-corners">
         <!-- TODO: Maybe put a label --> 
 
         <!-- Inner Container -->
-        <div id ="display-houses" class = "position-absolute all-0 d-flex flex-column ">
+        <div id ="display-houses" class = "position-absolute d-flex flex-column ">
           <!-- Items will be populated via JavaScript upon selection-->
-          <div class="accordion accordion-flush" id="accordionFlushExample"></div>
+          <div class="accordion accordion-flush align-items-center text-center" id="accordionFlushExample"></div>
         </div>
 
       </div>
 
       <!-- Map -->
-      <div class="col-9 mh-100 px-0">
+      <div class="col-md-9 mh-100 px-0">
         <div id="display-geo" class="h-100 w-100 px-2 py-2">
           <!-- Placeholder TODO: Swap this out with actual plugin 
           <img id="display-geo-map" src="doge.jpg" alt="map"> -->
@@ -125,6 +125,10 @@
 
         rooms = rooms.substring(2);
         price = "From $" + price; 
+        sale_type = listingData[index]["sale_type"];
+        if (sale_type == "resale"){
+          sale_type = "Resale";
+        }
 
         let content_html = 
           '<div class="accordion-item listing-item">' + 
@@ -132,7 +136,8 @@
               '<button id="' + button_id + '"class="accordion-button collapsed listing-button" type="button" data-bs-toggle="collapse" data-bs-target="#' + 
                 collapse_id + '" aria-expanded="false" aria-controls="' + collapse_id + '">' + 
                 '<p class = "listing-header-text">' + listingData[index]["name"] + '</br>' + 
-                  '<span class = "listing-header-subtext">' + rooms + '</span>' +
+                  '<span class = "listing-header-subtext">' + rooms + '</span><br/>' +
+                  '<span class = "listing-header-subtext">' + sale_type + '</span><br/>' +
                 '</p>' +  
               '</button>' + 
             '</h2>' + 
