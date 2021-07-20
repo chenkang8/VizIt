@@ -1,7 +1,7 @@
 import logging
 from flask import Flask, redirect, url_for, render_template, request, current_app, json
 import calculate 
-    
+
 app = Flask(__name__)
 
 def load_listings_data():
@@ -16,19 +16,18 @@ def load_listings_data():
     except:
         app.logger.debug("Something went wrong")
         
-# For use with gunicorn 
+# For use with gunicorn
 if __name__ != '__main__':
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
     app.logger.debug("THIS IS A TEST")
     app.listing_data = load_listings_data()
-     
+        
 @app.route("/")
 def feature1_main():
-    app.logger.debug("ENTRYPOINT MAIN CALLED!")
-    #return render_template("test_index.html")
-    return render_template("feature1_main.html", listing_data = app.listing_data)  
+    #return render_template("index.html", listing_data = current_app.listing_data)\
+    return render_template("feature1_main.html", listing_data = current_app.listing_data)  
 
 @app.route("/f1_formpage")
 def feature1_form():
@@ -42,11 +41,12 @@ def feature1_form():
         price_3room = prices["3_room"] if "3_room" in prices else -1
         price_4room = prices["4_room"] if "4_room" in prices else -1
         price_5room = prices["5_room"] if "5_room" in prices else -1
+        sale_type = selection["sale_type"]
     except Exception as e:
         #Todo, perhaps have some exception handling 
         return e
 
-    return render_template("feature1_form.html", listing_name = name, 
+    return render_template("feature1_form.html", listing_name = name, sale_type = sale_type,
                            price3Room = price_3room, price4Room = price_4room, price5Room = price_5room)
 
 @app.route("/f1_form_results", methods=["POST", "GET"])
@@ -54,35 +54,48 @@ def feature1_form_results():
     if request.method == "POST":
         # Passalong values - can be replaced with lookup by ID 
         listing_name = request.form["listingName"]
-        # Form input values 
+        
+        ## Form input retrieval & validation  
         flat_type = request.form["flatType"]
         flat_price = request.form["flatPrice"]
-        mstatus = request.form["mstatus"]
-        age = request.form["age"]
-        nationality = request.form["nationality"]
-        first_time = request.form["firstTime"]
-        monthly_income = request.form["mthInc"]
-        estDist = request.form["estDist"]
         
-        # Additional info 
-        # TODO: add these inputs to form 
-        applying_with_fam = "True"
-        # BTO OR RESALE
-        bto_or_resale = "bto"
-
-        # Input validation & Default values
-        monthly_income = 4500 if monthly_income == '' else int(monthly_income)
-        age = 35 if age == '' else int(age)
-            
+        maritial_status = request.form["mstatus"]
+        
+        # Details for Applicant 1 
+        age1 = request.form["age"]
+        age1 = 35 if age1 == '' else int(age1)
+        nationality1 = request.form["nationality"]
+        first_time1 = request.form["firstTime"]
+        monthly_income1 = request.form["mthInc"]
+        monthly_income1 = 4500 if monthly_income1 == '' else int(monthly_income1)
+        
+        # Details for Applicant 2 (passed in but functionally ignored if Single)
+        age2 = request.form["age2"]
+        age1 = 35 if age1 == '' else int(age1)
+        nationality2 = request.form["nationality2"]
+        first_time2 = request.form["firstTime2"]
+        monthly_income2 = request.form["mthInc2"]
+        monthly_income2 = 4500 if monthly_income2 == '' else int(monthly_income2)
+        
+        # Sale Type
+        sale_type = request.form["saleType"]
+        if sale_type == "resale":
+            estDist = request.form["estDist"]
+        else: 
+            estDist = "over"
+        
         ##  Calculation logic ## 
-        
         flat_price = int(flat_price)
         num_rooms = int(flat_type[0])
         
         # Get eligible grants (as list)
-        eligible_grants = calculate.get_grants(nationality, monthly_income, mstatus, age, applying_with_fam, int(flat_type[0]), estDist) 
+        num_rm = int(flat_type[0])
+        eligible_grants = calculate.get_grants(sale_type, maritial_status, estDist, num_rm, 
+                                               age1, nationality1, monthly_income1, first_time1, 
+                                               age2, nationality2, monthly_income2, first_time2) 
         total_grant = calculate.get_total_grant(eligible_grants)
 
+        # Calculate other payments 
         interest_rate = 2.6
         loan_years = 25
         
@@ -90,12 +103,13 @@ def feature1_form_results():
         monthly_mor = round(calculate.get_morgage(flat_price, upfront_payment, total_grant, interest_rate, loan_years), 2)
         monthly_payment = round(calculate.get_monthly_payment(monthly_mor, num_rooms), 2)
 
-        MSR = calculate.get_msr(monthly_income, monthly_payment) # String
-        Fin_status = calculate.get_status(MSR)
-
+        # Get MSR and Financial status
+        total_household_income = monthly_income1 if maritial_status == "Single" else monthly_income1 + monthly_income2
+        msr, fin_status = calculate.get_msr_and_status(total_household_income, monthly_payment) # String
+        
         # Break downs
         stamp_duty = calculate.get_stamp_duty(flat_price)
-        legal_fees = round(calculate.get_legal_fee(flat_price),2)
+        legal_fees = calculate.get_legal_fee(flat_price)
         downpayment = calculate.get_downpayment(flat_price)
         option_fee = calculate.get_option_fee(num_rooms)
         renovation = calculate.median_renovation()
@@ -104,29 +118,31 @@ def feature1_form_results():
         property_tax = calculate.median_housing_tax(num_rooms)
         
         return render_template("feature1_form_results.html",
+                            # Passalong
                             listing_name = listing_name, 
-                            flatType = flat_type, flatPrice = flat_price, 
-                            mstatus = mstatus, age = age, nationality = nationality, firstTime = first_time, 
-                            mthInc = monthly_income, estDist = estDist, MSR = MSR, Fin_status = Fin_status,
+                            flatType = flat_type, flatPrice = flat_price,
+                            mthInc = "{:.2f}".format(total_household_income),
+                            # Computed
+                            msr = msr, fin_status = fin_status,
                             eligible_grants = eligible_grants, # List  
-                            monthly_mor = monthly_mor, total_grant = total_grant,
-                            upfront_payment = upfront_payment, monthly_payment = monthly_payment,
+                            monthly_mor = "{:.2f}".format(monthly_mor),
+                            total_grant = "{:.2f}".format(total_grant),
+                            upfront_payment = "{:.2f}".format(upfront_payment), 
+                            monthly_payment = "{:.2f}".format(monthly_payment), 
                             # Breakdowns 
-                            stamp_duty = stamp_duty,
-                            legal_fees = legal_fees,
-                            downpayment = downpayment,
-                            option_fee = option_fee,
-                            renovation = renovation,
-                            installment = installment,
-                            utilities = utilities,
-                            property_tax = property_tax)
+                            stamp_duty = "{:.2f}".format(stamp_duty), 
+                            legal_fees = "{:.2f}".format(legal_fees),
+                            downpayment = "{:.2f}".format(downpayment),
+                            option_fee = "{:.2f}".format(option_fee), 
+                            renovation = "{:.2f}".format(renovation), 
+                            installment = "{:.2f}".format(installment),
+                            utilities = "{:.2f}".format(utilities),
+                            property_tax = "{:.2f}".format(property_tax)
+                            )
     else:
         # TODO: throw some http error here
         return render_template("feature1_form.html")
-    
-# @app.route("/test")
-# def test_load():
-#     return render_template("feature1_form_results.html")    
+     
     
 @app.route("/f2_main")
 def feature2_form():
@@ -146,7 +162,6 @@ def feature2_results():
         return render_template("feature2_charts_display.html")
 
 if __name__ == "__main__":
-    # This only runs when using flask development server
     app.logger.debug("APP IS RUNNING")
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.listing_data = load_listings_data()
