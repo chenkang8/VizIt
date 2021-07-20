@@ -85,7 +85,7 @@ def FG_compute(nationality1, nationality2, num_rm):
 def get_fg_married(num_rm, estDist, nationality1, mthInc1, nationality2, mthInc2):
     fg_amt = 0
     monthly_income = mthInc1 + mthInc2   
-    applying_with_fam = estDist == "Living w fam"  
+    applying_with_fam = estDist == "with"  
     if (applying_with_fam and monthly_income <= 21000): # Applying together with more family members, such as with your parents
         fg_amt = FG_compute(nationality1, nationality2, num_rm)
     elif (not applying_with_fam and monthly_income <= 14000):
@@ -95,7 +95,7 @@ def get_fg_married(num_rm, estDist, nationality1, mthInc1, nationality2, mthInc2
 
 def get_fg_single(num_rm, estDist, nationality1, mthInc1):
     fg_amt = 0
-    applying_with_fam = estDist == "Living w fam"
+    applying_with_fam = estDist == "with"
     
     # Dummy var
     nationality2 = "Singapore Citizen"
@@ -111,7 +111,7 @@ def get_fg_single(num_rm, estDist, nationality1, mthInc1):
 ## Only for resale
 def get_phg_married(estDist): 
     phg_amg = 0     
-    if estDist == "Living w fam":
+    if estDist == "with":
         phg_amg = 30000
     elif estDist == "under":
         phg_amg = 20000
@@ -120,7 +120,7 @@ def get_phg_married(estDist):
 
 def get_phg_single(estDist, mthInc1):   
     phg_amg = 0 
-    if estDist == "Living w fam":
+    if estDist == "with":
         phg_amg = 30000/2
     elif estDist == "under":
         phg_amg = 20000/2
