@@ -33,7 +33,7 @@ def get_ehg_married_bto(age1, nationality1, mthInc1, first_time1, age2, national
         ehg_amt = EHG_compute(monthly_income)/2
         # ref: https://dollarsandsense.sg/non-citizen-spouse-scheme-can-buy-hdb-bto-resale-flat-foreign-spouse/
     '''
-    return ("EHG", ehg_amt) if ehg_amt > 0 else None
+    return ("Enhanced Housing Grant (EHG)", ehg_amt) if ehg_amt > 0 else None
 
 def get_ehg_single_bto(age1, nationality1, mthInc1, first_time1):
     """ Enhanced Housing Grant (EHG) """
@@ -41,7 +41,7 @@ def get_ehg_single_bto(age1, nationality1, mthInc1, first_time1):
     if (mthInc1 <= 4500 and nationality1 == "Singapore Citizen" and age1 >= 35):
         ehg_amt = EHG_compute(mthInc1)/2
 
-    return ("EHG", ehg_amt) if ehg_amt > 0 else None
+    return ("Enhanced Housing Grant (EHG)", ehg_amt) if ehg_amt > 0 else None
 
 
 ## EHG For Resale
@@ -51,14 +51,13 @@ def get_ehg_married_res(age1, nationality1, mthInc1, first_time1, age2, national
     monthly_income = mthInc1 + mthInc2
     
     if (monthly_income <= 9000 and nationality1 == "Singapore Citizen" and nationality2 == "Singapore Citizen"):
-        print("babuskshsah  ")
         ehg_amt = EHG_compute(monthly_income)
 
     elif(monthly_income <= 9000 and nationality2 == "Singapore Citizen" and nationality2 != "Singapore Citizen" and age1 >= 21):
         ehg_amt = EHG_compute(monthly_income)/2
         # ref: https://dollarsandsense.sg/non-citizen-spouse-scheme-can-buy-hdb-bto-resale-flat-foreign-spouse/
     
-    return ("EHG", ehg_amt) if ehg_amt > 0 else None
+    return ("Enhanced Housing Grant (EHG)", ehg_amt) if ehg_amt > 0 else None
 
 def get_ehg_single_res(age1, nationality1, mthInc1, first_time1):
     """ Enhanced Housing Grant (EHG) """
@@ -66,7 +65,7 @@ def get_ehg_single_res(age1, nationality1, mthInc1, first_time1):
     if (mthInc1 <= 4500 and nationality1 == "Singapore Citizen" and age1 >= 35):
         ehg_amt = EHG_compute(mthInc1)/2
 
-    return ("EHG", ehg_amt) if ehg_amt > 0 else None
+    return ("Enhanced Housing Grant (EHG)", ehg_amt) if ehg_amt > 0 else None
 
 
 # Family grant
@@ -85,7 +84,10 @@ def FG_compute(nationality1, nationality2, num_rm):
         
     return grant
 
-def get_fg_married(num_rm, estDist, nationality1, mthInc1, nationality2, mthInc2):
+def get_fg_married(num_rm, estDist, nationality1, first_time1,  mthInc1, nationality2, mthInc2, first_time2):
+    if first_time1 != "true" or first_time2 != "true":
+        # Must be both first-timers to be eligible
+        return None 
     fg_amt = 0
     monthly_income = mthInc1 + mthInc2   
     applying_with_fam = estDist == "with"  
@@ -94,21 +96,21 @@ def get_fg_married(num_rm, estDist, nationality1, mthInc1, nationality2, mthInc2
     elif (not applying_with_fam and monthly_income <= 14000):
         fg_amt = FG_compute(nationality1, nationality2, num_rm)
 
-    return ("FG", fg_amt) if fg_amt > 0 else None
+    return ("Family Grant (FG)", fg_amt) if fg_amt > 0 else None
 
-def get_fg_single(num_rm, estDist, nationality1, mthInc1):
-    fg_amt = 0
-    applying_with_fam = estDist == "with"
+# def get_fg_single(num_rm, estDist, nationality1, mthInc1):
+#     fg_amt = 0
+#     applying_with_fam = estDist == "with"
     
-    # Dummy var
-    nationality2 = "Singapore Citizen"
+#     # Dummy var
+#     nationality2 = "Singapore Citizen"
 
-    if (applying_with_fam and mthInc1 <= 10500): # Applying together with more family members, such as with your parents
-        fg_amt = FG_compute(nationality1, nationality2, num_rm)/ 2
-    elif (not applying_with_fam and mthInc1 <= 7000):
-        fg_amt = FG_compute(nationality1, nationality2, num_rm)/ 2
+#     if (applying_with_fam and mthInc1 <= 10500): # Applying together with more family members, such as with your parents
+#         fg_amt = FG_compute(nationality1, nationality2, num_rm)/ 2
+#     elif (not applying_with_fam and mthInc1 <= 7000):
+#         fg_amt = FG_compute(nationality1, nationality2, num_rm)/ 2
 
-    return ("FG", fg_amt) if fg_amt > 0 else None
+#     return ("Family Grant (FG)", fg_amt) if fg_amt > 0 else None
 
 # Proximity grant
 ## Only for resale
@@ -119,7 +121,7 @@ def get_phg_married(estDist):
     elif estDist == "under":
         phg_amg = 20000
 
-    return ("PHG", phg_amg) if phg_amg > 0 else None
+    return ("Proximity Grant (PHG)", phg_amg) if phg_amg > 0 else None
 
 def get_phg_single(estDist, mthInc1):   
     phg_amg = 0 
@@ -128,4 +130,4 @@ def get_phg_single(estDist, mthInc1):
     elif estDist == "under":
         phg_amg = 20000/2
                 
-    return ("PHG", phg_amg) if phg_amg > 0 else None
+    return ("Proximity Grant (PHG)", phg_amg) if phg_amg > 0 else None

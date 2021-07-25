@@ -15,7 +15,7 @@ def married_cal(estDist, num_rm, age1, nationality1, mthInc1, first_time1, age2,
     if ehg: 
         eligible_grants.append(ehg)
     # Get FHG
-    fhg = general_computation.get_fg_married(num_rm, estDist, nationality1, mthInc1, nationality2, mthInc2)
+    fhg = general_computation.get_fg_married(num_rm, estDist, nationality1, first_time1, mthInc1, nationality2, mthInc2, first_time2)
     if fhg: 
         eligible_grants.append(fhg)
     # Get PHG
@@ -31,10 +31,13 @@ def single_cal(estDist, num_rm, age1, nationality1, mthInc1, first_time1):
     ehg = general_computation.get_ehg_single_res(age1, nationality1, mthInc1, first_time1)
     if ehg: 
         eligible_grants.append(ehg)
+    """ 
+    Singles are not eligible for Family Grant 
     # Get FHG
     fhg = general_computation.get_fg_single(num_rm, estDist, nationality1, mthInc1)
     if fhg: 
         eligible_grants.append(fhg)
+    """
     # Get PHG
     phg = general_computation.get_phg_single(estDist, mthInc1)
     if phg: 
